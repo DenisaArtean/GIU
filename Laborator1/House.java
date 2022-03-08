@@ -145,13 +145,13 @@ public class House extends JFrame implements GLEventListener
 		
 		gl.glBegin( GL2.GL_LINES );
 			gl.glColor3f(0.0f, 1.0f, 1.0f);
-	        gl.glVertex2d(0, 0.8);
-	        gl.glVertex2d(-0.4, 0.4);
+	        	gl.glVertex2d(0, 0.8);
+	        	gl.glVertex2d(-0.4, 0.4);
 	 
-	    	gl.glColor3f( 1.0f,0.0f,1.0f ); 
-	        gl.glVertex2d(0, 0.8);
-	        gl.glVertex2d(0.4, 0.4);
-	    gl.glEnd();
+	    		gl.glColor3f( 1.0f,0.0f,1.0f ); 
+	        	gl.glVertex2d(0, 0.8);
+	        	gl.glVertex2d(0.4, 0.4);
+	    	gl.glEnd();
 		
 		// Forcing the scene to be rendered.
 		gl.glFlush();
