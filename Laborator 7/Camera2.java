@@ -34,6 +34,10 @@ public class Camera2 extends JFrame implements GLEventListener, KeyListener, Mou
 	private TextureHandler earthTexture, sunTexture, moonTexture, cloudTexture;
 	private float angle = 0.0f;
 	private float angle2 = 0.5f;
+	// Variables for storing the mouse coordinates when a click event occurs.
+	private int mouseX, mouseY;
+	// Default mode is GL_RENDER;
+	private int mode = GL2.GL_RENDER;
 	
 	private GLU glu;
 
@@ -242,35 +246,52 @@ public class Camera2 extends JFrame implements GLEventListener, KeyListener, Mou
 			
 		if (cameraAzimuth < 1)
 			cameraAzimuth = 359;	 	
-	}	
+	}
+
+
+	
 
 	
 	public void display(GLAutoDrawable canvas)
 	{
 		GL2 gl = canvas.getGL().getGL2();
-		
+			
 		// Erasing the canvas -- filling it with the clear color.
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 		gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
 		
 		gl.glLoadIdentity();
+		float widthHeightRatio = (float) getWidth() / (float) getHeight();
+		glu.gluPerspective(45, widthHeightRatio, 1, 1000);
+		glu.gluLookAt(0, 0, 300, 0, 0, 0, 0, 1, 0);
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
+		gl.glLoadIdentity();
+
 		// Always be sure to place these to method calls after glClear and glLoadIdentity are called.
 		aimCamera(gl, glu);
-		moveCamera();
-		
+		//moveCamera();
+		float[] tmp = polarToCartesian(cameraAzimuth, cameraSpeed, cameraElevation);
+
+		cameraCoordsPosx += tmp[0];
+		cameraCoordsPosy += tmp[1];
+		cameraCoordsPosz += tmp[2];
+
+//-----------------------------------------------------------------------------------------------------------------------------  SUN		
 		// Save (push) the current matrix on the stack.
 		gl.glPushMatrix();
+		
 		gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_AMBIENT, new float [] {0.7f, 0.7f, 0.7f, 1.0f}, 0);
 		gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_DIFFUSE, new float [] {0.1f, 0.5f, 0.8f, 1.0f}, 0);
 		gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_POSITION, new float [] {-10f, 0.0f, 0.0f, 1f}, 0);
 		gl.glMaterialf(GL2.GL_FRONT, GL2.GL_SHININESS, 100.0f);
 		gl.glMaterialfv(GL2.GL_FRONT, GL2.GL_EMISSION, new float [] {0.3f, 0.2f, 0.2f, 0.0f}, 0);
 
-		// Translate the first sphere to coordinates (0,0,-3).
+		// Translate the first sphere to coordinates (0,0,-5).
 		gl.glTranslatef(0f, 0f, -5.0f);
 		// Then draw it.
 		sunTexture.bind();
 		sunTexture.enable();
+		gl.glPushName(1);
 		GLUquadric sun = glu.gluNewQuadric();
         // Enabling texturing on the quadric.
 		glu.gluQuadricTexture(sun, true);
@@ -279,12 +300,13 @@ public class Camera2 extends JFrame implements GLEventListener, KeyListener, Mou
 
 		// Save (push) on the stack the matrix holding the transformations produced by translating the first sphere. 
 		gl.glPushMatrix();
-//-----------------------------------------------------------------------------------------------------------------------------  SUN
+		gl.glPopName();
+//----------------------------------------------------------------------------------------------------------------------------- EARTH
 		// NOTE THE FOLLOWING ORDER OF OPERATIONS. THEY ACHIEVE A TRANSLATION FOLLOWED BY A ROTATION IN REALITY.
 
 		// Rotate it with angle degrees around the X axis.
 		gl.glRotatef (angle, 0, 1, 0);
-		// Translate the second sphere to coordinates (0,0,-4).
+		// Translate the second sphere to coordinates (0,0,-2).
 		gl.glTranslatef (0.0f, 0.0f, -2.0f);
 		// Scale it 
 		gl.glScalef (0.9f, 0.9f, 0.9f);
@@ -299,14 +321,13 @@ public class Camera2 extends JFrame implements GLEventListener, KeyListener, Mou
 			
 		gl.glPushMatrix();
 
-//----------------------------------------------------------------------------------------------------------------------------- EARTH
-		
+//----------------------------------------------------------------------------------------------------------------------------- MOON		
 		gl.glRotatef (angle2, 0, 1, 0);
-		// Translate the second sphere to coordinates (0,0,-4).
+		// Translate the second sphere to coordinates (0,0,-1).
 		gl.glTranslatef (0.0f, 0.0f, -1.0f);
 		// Scale it 
 		gl.glScalef (0.5f, 0.5f, 0.5f);
-		// Draw the second sphere.
+		// Draw the third sphere.
 		moonTexture.bind();
 		moonTexture.enable();
 		GLUquadric moon = glu.gluNewQuadric();
@@ -315,14 +336,13 @@ public class Camera2 extends JFrame implements GLEventListener, KeyListener, Mou
 		glu.gluSphere(moon, 0.5, 64, 64);
 		glu.gluDeleteQuadric(moon);
 
-//----------------------------------------------------------------------------------------------------------------------------- MOON
-		
-		// Restore (pop) from the stack the matrix holding the transformations prior to our translation of the first sphere. 
-		gl.glPopMatrix();
-		// Restore (pop) from the stack the matrix holding the transformations prior to our translation of the first sphere. 
-		gl.glPopMatrix();
 		// Restore (pop) from the stack the matrix holding the transformations produced by translating the first sphere.
 		gl.glPopMatrix();
+		// Restore (pop) from the stack the matrix holding the transformations prior to our translation of the first sphere. 
+		gl.glPopMatrix();
+		// Restore (pop) from the stack the matrix holding the transformations prior to our translation of the first sphere. 
+		gl.glPopMatrix();
+		
 
 		gl.glFlush();
 
@@ -365,6 +385,29 @@ public class Camera2 extends JFrame implements GLEventListener, KeyListener, Mou
 		return;
 	
 	}
+	
+	// The x position
+		private float xpos;
+
+		// The rotation value on the y axis
+		private float yrot;
+
+		// The z position
+		private float zpos;
+
+		private float heading;
+
+		// Walkbias for head bobbing effect
+		private float walkbias = 0.0f;
+
+		// The angle used in calculating walkbias */
+		private float walkbiasangle = 0.0f;
+
+		// The value used for looking up or down pgup or pgdown
+		private float lookupdown = 0.0f;
+
+		// Define an array to keep track of the key that was pressed
+		private boolean[] keys = new boolean[250];
 
 	public void keyReleased(KeyEvent event)
 	{
@@ -373,6 +416,7 @@ public class Camera2 extends JFrame implements GLEventListener, KeyListener, Mou
 	
 	public void keyTyped(KeyEvent event)
 	{
+		
 		return;
 	}
 	
