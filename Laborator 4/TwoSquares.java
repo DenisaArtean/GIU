@@ -113,7 +113,7 @@ public class TwoSquares extends JFrame implements GLEventListener
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 		gl.glEnable(GL.GL_BLEND);
         
-        gl.glLoadIdentity();
+       		 gl.glLoadIdentity();
 		
 		// Add your scene code here
 //        gl.glBlendFunc(GL.GL_SRC_COLOR, GL.GL_DST_ALPHA);
@@ -121,7 +121,7 @@ public class TwoSquares extends JFrame implements GLEventListener
         gl.glBlendFunc(GL.GL_SRC_COLOR, GL.GL_ONE_MINUS_SRC_COLOR);
 //        gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
         
-        texture1.bind();
+       		 texture1.bind();
 		texture1.enable();
 		if(square1XPos >= 0.8) {
 			left = true;
@@ -131,7 +131,7 @@ public class TwoSquares extends JFrame implements GLEventListener
 		}
 		
 		square1XPos = left? square1XPos-0.01f : square1XPos+0.01f;
-        gl.glBegin(GL2.GL_QUADS);
+       		 gl.glBegin(GL2.GL_QUADS);
 			// Lower left corner.
 			gl.glTexCoord2f(0.0f+square1XPos, 0.0f);
 			gl.glVertex2f(0.1f+square1XPos, 0.1f);
