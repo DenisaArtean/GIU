@@ -120,13 +120,13 @@ public class ChessBoardTexture extends JFrame implements GLEventListener
 			{
 				gl.glTexSubImage2D(GL2.GL_TEXTURE_2D, 0, textureW.getTexture().getWidth()/16*i, textureW.getTexture().getWidth()/16*j,
 							textureB.getTexture().getWidth()/16,
-	                        textureB.getTexture().getHeight()/16, GL2.GL_RGB,
-	                        GL2.GL_UNSIGNED_BYTE, textureB.getTexture().getPixels());	
+	                        			textureB.getTexture().getHeight()/16, GL2.GL_RGB,
+	                        			GL2.GL_UNSIGNED_BYTE, textureB.getTexture().getPixels());	
 				
 				gl.glTexSubImage2D(GL2.GL_TEXTURE_2D, 0, textureW.getTexture().getWidth()/16*(i+1), textureW.getTexture().getWidth()/16*(j+1),
 						textureB.getTexture().getWidth()/16,
-                        textureB.getTexture().getHeight()/16, GL2.GL_RGB,
-                        GL2.GL_UNSIGNED_BYTE, textureB.getTexture().getPixels());	
+                       				textureB.getTexture().getHeight()/16, GL2.GL_RGB,
+                        			GL2.GL_UNSIGNED_BYTE, textureB.getTexture().getPixels());	
 			}
 		}
 		
