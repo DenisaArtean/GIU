@@ -110,7 +110,7 @@ public class House extends JFrame implements GLEventListener
 		}
 		
 		sunXPos = left? sunXPos-0.01f : sunXPos+0.01f;
-		double startY = 0.7, radius = 0.2;
+		double startY = 0.8, radius = 0.1;
 		gl.glBegin(GL.GL_LINE_LOOP);
 			gl.glColor3f(1.0f, 1.0f, 0.0f);   
 			for(int i=0; i <= 360; i++){
@@ -125,33 +125,33 @@ public class House extends JFrame implements GLEventListener
 		
 		gl.glBegin( GL2.GL_LINES );  
 			gl.glColor3f(0.0f, 0.0f, 1.0f);
-			gl.glVertex2d(-0.4, 0.4);  
-			gl.glVertex2d(0.4, 0.4);  
+			gl.glVertex2d(-0.3, 0.3);  
+			gl.glVertex2d(0.3, 0.3);  
 	
 			gl.glColor3f( 0.0f,1.0f,0.0f ); 
-			gl.glVertex2d(-0.4,-0.4);  
-			gl.glVertex2d(0.4, -0.4);  
+			gl.glVertex2d(-0.3,-0.3);  
+			gl.glVertex2d(0.3, -0.3);  
 		  
 			gl.glColor3f(0.0f, 1.0f, 1.0f);
-			gl.glVertex2d(-0.4, 0.4);  
-			gl.glVertex2d(-0.4, -0.4);  
+			gl.glVertex2d(-0.3, 0.3);  
+			gl.glVertex2d(-0.3, -0.3);  
 	 
 			gl.glColor3f( 1.0f,0.0f,1.0f ); 
-			gl.glVertex2d(0.4, 0.4);  
-			gl.glVertex2d(0.4, -0.4);  
+			gl.glVertex2d(0.3, 0.3);  
+			gl.glVertex2d(0.3, -0.3);  
 		gl.glEnd();  
 		
 		// roof
 		
 		gl.glBegin( GL2.GL_LINES );
 			gl.glColor3f(0.0f, 1.0f, 1.0f);
-	        	gl.glVertex2d(0, 0.8);
-	        	gl.glVertex2d(-0.4, 0.4);
+	        gl.glVertex2d(0, 0.6);
+	        gl.glVertex2d(-0.3, 0.3);
 	 
-	    		gl.glColor3f( 1.0f,0.0f,1.0f ); 
-	        	gl.glVertex2d(0, 0.8);
-	        	gl.glVertex2d(0.4, 0.4);
-	    	gl.glEnd();
+	    	gl.glColor3f( 1.0f,0.0f,1.0f ); 
+	        gl.glVertex2d(0, 0.6);
+	        gl.glVertex2d(0.3, 0.3);
+	    gl.glEnd();
 		
 		// Forcing the scene to be rendered.
 		gl.glFlush();
